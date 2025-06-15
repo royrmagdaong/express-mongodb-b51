@@ -37,11 +37,28 @@ router.get('/user/:email', async (req,res)=>{
     }
 })
 
-router.post('/login',(req,res)=>{
-    try {
-            
+router.post('/login',async (req,res)=>{
+    const email = req.body.email
+    const password = req.body.password
 
-        res.status(200).json({message: 'logged in successfully!', data: [], users: {email, password}})
+    try {
+        let user = await User.findOne({ email: email}).exec()
+        if(user){
+            if(user.deleted_at === null) {
+                bcrypt.compare(password, user.password, (err, result)=>{
+                    if(err) res.status(500).json({message: err})
+                    if(result){
+                        res.status(200).json({message: 'logged in successfully!', user: user})
+                    }else{
+                        res.status(200).json({message: 'incorrect password'})
+                    }
+                })
+                
+            }else{
+                res.status(404).json({message: 'user not exist!'})
+            }
+        }
+        
     } catch (error) {
             res.status(500).json({message: error.message})
     }
