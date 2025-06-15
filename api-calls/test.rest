@@ -1,5 +1,19 @@
 GET http://localhost:5000/
 Content-Type: application/json
 
+###
 GET http://localhost:5000/contact
 Content-Type: application/json
+
+###
+GET http://localhost:5000/roy123456
+Content-Type: application/json
+
+###
+POST http://localhost:5000/
+Content-Type: application/json
+
+{
+    "username": "roy",
+    "password": "password123"
+}
