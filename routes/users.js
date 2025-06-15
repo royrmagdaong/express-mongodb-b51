@@ -30,7 +30,7 @@ router.get('/get-users', async (req,res)=>{
                 jwt.verify(token[1], 'jobhunt', async (err, decodedToken) => {
                     if(err) await res.status(200).json({ errorMessage: 'invalid Token!'})
                     if(decodedToken){
-                        let users = await User.find({}).where({deleted_at: null})
+                        let users = await User.find({}).select('name email role _id').where({deleted_at: null})
                         await res.status(200).json({ message: 'Authorized!', decodedToken, users })
                     }
                 })
