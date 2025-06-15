@@ -9,9 +9,18 @@ app.use(cors())
 
 
 app.get('/', (req, res) => {
-    res.status(200).json({message: 'hello world', data: [1,2,3,4,5]})
+   try {
+        const pi = 3.14
+        pi = 1233;
+        res.status(200).json({message: 'hello world', data: [1,2,3,4,5]})
+   } catch (error) {
+        res.status(500).json({message: error.message})
+   }
 })
 
+app.get('/contact', (req, res) => {
+    res.status(200).json({message: 'contacts', data: [1,2,3,4,5]})
+})
 
 app.listen(port, ()=>{
     console.log(`example app listening on port ${port}`)
