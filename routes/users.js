@@ -1,6 +1,8 @@
 const express = require('express')
 const router = express.Router()
 const User = require('../model/user')
+const bcrypt = require('bcrypt')
+const saltRounds = 10;
 
 
 router.get('/',(req,res)=>{
@@ -12,6 +14,7 @@ router.get('/',(req,res)=>{
     }
 })
 
+// get all users
 router.get('/get-users', async (req,res)=>{
     try {
             let users = await User.find({})
@@ -22,6 +25,7 @@ router.get('/get-users', async (req,res)=>{
     }
 })
 
+// get user via email params
 router.get('/user/:email', async (req,res)=>{
     try {
             let email = req.params.email
@@ -48,17 +52,29 @@ router.post('/register-user',async (req,res)=>{
     const email = req.body.email
     const password = req.body.password
 
+    // 
     try {
 
-            const user = new User({
-                email: email,
-                password: password,
-                role: "normal-user"
-            })
+        bcrypt.genSalt(saltRounds, (err, salt) => {
+            if(err) res.status(500).json({message: `registration failed!`, error: err})
 
-            await user.save()
+            bcrypt.hash(password, salt, async (err, hash) => {
+                // Store hash in your password DB.
+                if(err) res.status(500).json({message: `password hashing failed!`, error: err})
+                if(hash){
+                    const user = new User({
+                        email: email,
+                        password: hash,
+                        role: "normal-user"
+                    })
 
-            res.status(200).json({message: `user ${email} created!`, user: user})
+                    await user.save()
+                    res.status(200).json({message: `user ${email} created!`, user: user})
+                }
+            });
+        });
+
+            
     } catch (error) {
         if(error.errorResponse.code === 11000){
             res.status(500).json({message: `${email} is already existed. try another email`})
@@ -66,5 +82,7 @@ router.post('/register-user',async (req,res)=>{
         res.status(500).json({message: error})
     }
 })
+
+
 
 module.exports = router
