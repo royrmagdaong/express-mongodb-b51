@@ -17,3 +17,16 @@ Content-Type: application/json
     "username": "roy",
     "password": "password123"
 }
+
+###
+GET http://localhost:5000/api/user
+Content-Type: application/json
+
+###
+POST http://localhost:5000/api/user/login
+Content-Type: application/json
+
+{
+    "email": "test@gmail.com",
+    "password": "password123"
+}
