@@ -30,3 +30,11 @@ Content-Type: application/json
     "email": "test@gmail.com",
     "password": "password123"
 }
+
+###
+GET http://localhost:5000/api/user/get-users
+Content-Type: application/json
+
+###
+GET http://localhost:5000/api/user/user/test@test.com
+Content-Type: application/json
