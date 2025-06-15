@@ -27,7 +27,7 @@ router.get('/get-users', async (req,res)=>{
             if(tokenHeader){
                 let token = tokenHeader.split(" ")
                 
-                jwt.verify(token[1], 'jobhunt', async (err, decodedToken) => {
+                jwt.verify(token[1], process.env.SECRET_KEY, async (err, decodedToken) => {
                     if(err) await res.status(200).json({ errorMessage: 'invalid Token!'})
                     if(decodedToken){
                         let users = await User.find({}).select('name email role _id').where({deleted_at: null})
@@ -68,7 +68,7 @@ router.post('/login',async (req,res)=>{
                     if(err) res.status(500).json({message: err})
                     if(result){ // successful login
                         // token generation
-                        jwt.sign({ role: user.role, email: user.email, id: user._id }, 'jobhunt', {expiresIn: '1d'}, (err, token) => {
+                        jwt.sign({ role: user.role, email: user.email, id: user._id }, process.env.SECRET_KEY, {expiresIn: '1d'}, (err, token) => {
                             if(err) res.status(500).json({errorMessage: err})
                             if(token){
                                 res.status(200).json({message: 'logged in successfully!', user: {

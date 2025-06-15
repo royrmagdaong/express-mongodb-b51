@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const express = require('express')
 const cors = require('cors')
 const mongoose = require('mongoose');
@@ -12,7 +14,7 @@ app.use(express.json()) //Notice express.json middleware
 
 // connect to mongodb
 // Database connection
-mongoose.connect('mongodb://127.0.0.1:27017/jobhunt')
+mongoose.connect(`${process.env.DATABASE_URL}/${process.env.DATABASE_NAME}`)
 
 const db = mongoose.connection
 db.on('error', (error) => console.error(error))

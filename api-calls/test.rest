@@ -34,7 +34,7 @@ Content-Type: application/json
 ###
 GET http://localhost:5000/api/user/get-users
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoibm9ybWFsLXVzZXIiLCJlbWFpbCI6InRlc3Q0QHRlc3QuY29tIiwiaWQiOiI2ODRlNzU3ZTEwNWM5OTFkNjc0MmY0ZjYiLCJpYXQiOjE3NDk5NzQ1NDQsImV4cCI6MTc1MDA2MDk0NH0.bnxdhQg_FA8IJ4_gbXEr4mHIljheq4ydznVuP6i--c0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoibm9ybWFsLXVzZXIiLCJlbWFpbCI6InRlc3Q1QHRlc3QuY29tIiwiaWQiOiI2ODRlODJmYTFiMjI2MWFhYmQ3NzZhNTIiLCJpYXQiOjE3NDk5Nzc3NzcsImV4cCI6MTc1MDA2NDE3N30.z-iVPULRpk61z3ozv4B-UPCXaSsuSlk-yEBK7Gic-fw
 
 ###
 GET http://localhost:5000/api/user/get-users
@@ -59,7 +59,7 @@ POST http://localhost:5000/api/user/login
 Content-Type: application/json
 
 {
-    "email": "test4@test.com",
+    "email": "test5@test.com",
     "password": "password123"
 }
 
