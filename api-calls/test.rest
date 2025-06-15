@@ -62,3 +62,20 @@ Content-Type: application/json
     "email": "test4@test.com",
     "password": "password123"
 }
+
+###
+POST http://localhost:5000/api/user/delete-user
+Content-Type: application/json
+
+{
+    "email": "test4@test.com"
+}
+
+###
+POST http://localhost:5000/api/user/update-user
+Content-Type: application/json
+
+{
+    "email": "test3@test.com",
+    "name": "john doe"
+}

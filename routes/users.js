@@ -6,6 +6,9 @@ const jwt = require('jsonwebtoken')
 const saltRounds = 10;
 
 
+// CRUD - CREATE, READ, UPDATE, DELETE
+
+// read
 router.get('/',(req,res)=>{
     try {
             const pi = 3.14
@@ -16,6 +19,7 @@ router.get('/',(req,res)=>{
 })
 
 // get all users
+// read but authorized
 router.get('/get-users', async (req,res)=>{
     try {
             // const token = 
@@ -26,7 +30,7 @@ router.get('/get-users', async (req,res)=>{
                 jwt.verify(token[1], 'jobhunt', async (err, decodedToken) => {
                     if(err) await res.status(200).json({ errorMessage: 'invalid Token!'})
                     if(decodedToken){
-                        let users = await User.find({})
+                        let users = await User.find({}).where({deleted_at: null})
                         await res.status(200).json({ message: 'Authorized!', decodedToken, users })
                     }
                 })
@@ -59,6 +63,7 @@ router.post('/login',async (req,res)=>{
         let user = await User.findOne({ email: email}).exec()
         if(user){
             if(user.deleted_at === null) {
+                // comparing plain password to hashed password
                 bcrypt.compare(password, user.password, (err, result)=>{
                     if(err) res.status(500).json({message: err})
                     if(result){ // successful login
@@ -95,7 +100,7 @@ router.post('/register-user',async (req,res)=>{
 
     // 
     try {
-
+        // password hashing
         bcrypt.genSalt(saltRounds, (err, salt) => {
             if(err) res.status(500).json({message: `registration failed!`, error: err})
 
@@ -120,6 +125,48 @@ router.post('/register-user',async (req,res)=>{
         if(error.errorResponse.code === 11000){
             res.status(500).json({message: `${email} is already existed. try another email`})
         }
+        res.status(500).json({message: error})
+    }
+})
+
+// soft delete user
+router.post('/delete-user',async (req,res)=>{
+    const email = req.body.email
+
+    // 
+    try {
+       let user = await User.findOne({ email: email}).exec()
+       if(user){
+            let newUser = await User.findOne({ email: email}).updateOne({deleted_at: new Date()})
+
+            res.status(500).json({message: `${email} deleted successfully!`, user: newUser})
+       }else{
+            res.status(500).json({message: `${email} is not exists!`})
+       }
+
+            
+    } catch (error) {
+        res.status(500).json({message: error})
+    }
+})
+
+// update user
+router.post('/update-user',async (req,res)=>{
+    const email = req.body.email
+    const name = req.body.name
+    // 
+    try {
+       let user = await User.findOne({ email: email}).exec()
+       if(user){
+            let newUser = await User.findOne({ email: email}).where({deleted_at: null}).updateOne({name: name})
+
+            res.status(500).json({message: `${email} updated successfully!`, user: newUser})
+       }else{
+            res.status(500).json({message: `${email} is not exists!`})
+       }
+
+            
+    } catch (error) {
         res.status(500).json({message: error})
     }
 })
