@@ -4,6 +4,7 @@ const User = require('../model/user')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const saltRounds = 10;
+const authenticate = require('../middleware/authenticate')
 
 
 // CRUD - CREATE, READ, UPDATE, DELETE
@@ -20,23 +21,10 @@ router.get('/',(req,res)=>{
 
 // get all users
 // read but authorized
-router.get('/get-users', async (req,res)=>{
+router.get('/get-users', authenticate, async (req,res)=>{
     try {
-            // const token = 
-            let tokenHeader = req.headers['authorization']
-            if(tokenHeader){
-                let token = tokenHeader.split(" ")
-                
-                jwt.verify(token[1], process.env.SECRET_KEY, async (err, decodedToken) => {
-                    if(err) await res.status(200).json({ errorMessage: 'invalid Token!'})
-                    if(decodedToken){
-                        let users = await User.find({}).select('name email role _id').where({deleted_at: null})
-                        await res.status(200).json({ message: 'Authorized!', decodedToken, users })
-                    }
-                })
-            }else{
-                res.status(401).json({ errorMessage: 'unauthorized!'})
-            }
+        let users = await User.find({}).select('name email role _id').where({deleted_at: null})
+        await res.status(200).json({ message: 'Authorized!', decodedToke: res.user, users })
             
     } catch (error) {
             res.status(500).json({message: error.message})
@@ -130,7 +118,7 @@ router.post('/register-user',async (req,res)=>{
 })
 
 // soft delete user
-router.post('/delete-user',async (req,res)=>{
+router.post('/delete-user', authenticate ,async (req,res)=>{
     const email = req.body.email
 
     // 

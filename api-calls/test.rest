@@ -66,9 +66,10 @@ Content-Type: application/json
 ###
 POST http://localhost:5000/api/user/delete-user
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoibm9ybWFsLXVzZXIiLCJlbWFpbCI6InRlc3Q1QHRlc3QuY29tIiwiaWQiOiI2ODRlODJmYTFiMjI2MWFhYmQ3NzZhNTIiLCJpYXQiOjE3NDk5Nzc3NzcsImV4cCI6MTc1MDA2NDE3N30.z-iVPULRpk61z3ozv4B-UPCXaSsuSlk-yEBK7Gic-fw
 
 {
-    "email": "test4@test.com"
+    "email": "test5@test.com"
 }
 
 ###
