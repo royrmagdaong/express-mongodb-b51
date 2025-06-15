@@ -18,8 +18,21 @@ router.get('/',(req,res)=>{
 // get all users
 router.get('/get-users', async (req,res)=>{
     try {
-            let users = await User.find({})
-            await res.status(200).json({message: 'get all users', users: users})
+            // const token = 
+            let tokenHeader = req.headers['authorization']
+            if(tokenHeader){
+                let token = tokenHeader.split(" ")
+                
+                jwt.verify(token[1], 'jobhunt', async (err, decodedToken) => {
+                    if(err) await res.status(200).json({ errorMessage: 'invalid Token!'})
+                    if(decodedToken){
+                        let users = await User.find({})
+                        await res.status(200).json({ message: 'Authorized!', decodedToken, users })
+                    }
+                })
+            }else{
+                res.status(401).json({ errorMessage: 'unauthorized!'})
+            }
             
     } catch (error) {
             res.status(500).json({message: error.message})
