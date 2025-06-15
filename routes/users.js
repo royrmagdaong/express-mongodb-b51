@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const User = require('../model/user')
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 const saltRounds = 10;
 
 
@@ -47,8 +48,18 @@ router.post('/login',async (req,res)=>{
             if(user.deleted_at === null) {
                 bcrypt.compare(password, user.password, (err, result)=>{
                     if(err) res.status(500).json({message: err})
-                    if(result){
-                        res.status(200).json({message: 'logged in successfully!', user: user})
+                    if(result){ // successful login
+                        // token generation
+                        jwt.sign({ role: user.role, email: user.email, id: user._id }, 'jobhunt', {expiresIn: '1d'}, (err, token) => {
+                            if(err) res.status(500).json({errorMessage: err})
+                            if(token){
+                                res.status(200).json({message: 'logged in successfully!', user: {
+                                    email: user.email,
+                                    role: user.role,
+                                    token: token
+                                }})
+                            }
+                        })
                     }else{
                         res.status(200).json({message: 'incorrect password'})
                     }
