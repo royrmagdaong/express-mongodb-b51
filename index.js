@@ -9,7 +9,7 @@ app.use(cors())
 
 
 app.get('/', (req, res) => {
-    res.send('hello world')
+    res.status(200).json({message: 'hello world', data: [1,2,3,4,5]})
 })
 
 
