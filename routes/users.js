@@ -35,8 +35,7 @@ router.get('/user/:email', async (req,res)=>{
 
 router.post('/login',(req,res)=>{
     try {
-            const email = req.body.email
-            const password = req.body.password
+            
 
         res.status(200).json({message: 'logged in successfully!', data: [], users: {email, password}})
     } catch (error) {
@@ -44,11 +43,27 @@ router.post('/login',(req,res)=>{
     }
 })
 
-router.post('/register',(req,res)=>{
+// register normal user
+router.post('/register-user',async (req,res)=>{
+    const email = req.body.email
+    const password = req.body.password
+
     try {
-            res.status(200).json({message: 'registration complete'})
+
+            const user = new User({
+                email: email,
+                password: password,
+                role: "normal-user"
+            })
+
+            await user.save()
+
+            res.status(200).json({message: `user ${email} created!`, user: user})
     } catch (error) {
-            res.status(500).json({message: error.message})
+        if(error.errorResponse.code === 11000){
+            res.status(500).json({message: `${email} is already existed. try another email`})
+        }
+        res.status(500).json({message: error})
     }
 })
 

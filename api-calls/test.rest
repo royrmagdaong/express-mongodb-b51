@@ -38,3 +38,12 @@ Content-Type: application/json
 ###
 GET http://localhost:5000/api/user/user/test@test.com
 Content-Type: application/json
+
+###
+POST http://localhost:5000/api/user/register-user
+Content-Type: application/json
+
+{
+    "email": "test3@test.com",
+    "password": "password123"
+}
